@@ -16,6 +16,13 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends CrudRepository<Request, Long> {
 
+    @Query("SELECT req from Request req WHERE (:status IS NULL OR req.status = :status) and (req.client.id= :client) " +
+            " and (:startDate is null or req.date > :startDate) and :endDate is null  or req.date < :endDate")
+    Page<Request> findAllByStatusAndClientAndDateBetween(@Param("status") Long status,
+                                                       @Param("client") Long client,
+                                                       @Param("startDate") LocalDateTime startDate,
+                                                       @Param("endDate") LocalDateTime endDate,
+                                                       Pageable pageable);
     List<Request> findAll();
 
 }
